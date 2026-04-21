@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "DummyJSON API Automation",
+    "_postman_id": "e669f988-ec1f-4fc7-a58b-53ca70ef6417",
+    "description": "Colecao para atividade final de Qualidade e Teste de Software",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Products - Add",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Produto Teste QA\",\n  \"price\": 999\n}"
+        },
+        "url": "{{baseUrl}}/products/add"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+              "const json = pm.response.json();",
+              "pm.test('Campos obrigatorios', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('title'); });",
+              "pm.environment.set('productId', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"price\": 1099\n}" },
+        "url": "{{baseUrl}}/products/{{productId}}"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Retorna id e price', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('price'); });"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Products - Delete",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/products/{{productId}}" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Retorna isDeleted', function () { pm.expect(json).to.have.property('isDeleted'); });"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Users - Add",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"QA\",\n  \"lastName\": \"Aluno\",\n  \"age\": 25\n}" },
+        "url": "{{baseUrl}}/users/add"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Campos obrigatorios', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('firstName'); });",
+        "pm.environment.set('userId', json.id);"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Users - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"age\": 30\n}" },
+        "url": "{{baseUrl}}/users/{{userId}}"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Retorna id e age', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('age'); });"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Users - Delete",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/users/{{userId}}" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Retorna isDeleted', function () { pm.expect(json).to.have.property('isDeleted'); });"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"emilys\",\n  \"password\": \"emilyspass\",\n  \"expiresInMins\": 30\n}"
+        },
+        "url": "{{baseUrl}}/auth/login"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Retorna token e id', function () { pm.expect(json).to.have.property('accessToken'); pm.expect(json).to.have.property('id'); });",
+        "pm.environment.set('authToken', json.accessToken);",
+        "pm.environment.set('authUserId', json.id);"
+      ], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Auth - Me (com token)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+        "url": "{{baseUrl}}/auth/me"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Tempo < 2s', function () { pm.expect(pm.response.responseTime).to.be.below(2000); });",
+        "const json = pm.response.json();",
+        "pm.test('Usuario autenticado correto', function () { pm.expect(json.id).to.eql(Number(pm.environment.get('authUserId'))); });",
+        "pm.test('Estrutura minima', function () { pm.expect(json).to.have.property('username'); pm.expect(json).to.have.property('email'); });"
+      ], "type": "text/javascript" } }]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "https://dummyjson.com" }
+  ]
+}
